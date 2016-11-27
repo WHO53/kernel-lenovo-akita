@@ -72,6 +72,9 @@ int fscrypt_ioctl_set_policy(struct file *filp, const void __user *arg)
 	if (copy_from_user(&policy, arg, sizeof(policy)))
 		return -EFAULT;
 
+	if (copy_from_user(&policy, arg, sizeof(policy)))
+		return -EFAULT;
+
 	if (!inode_owner_or_capable(inode))
 		return -EACCES;
 
@@ -95,14 +98,12 @@ int fscrypt_ioctl_set_policy(struct file *filp, const void __user *arg)
 		else
 			ret = create_encryption_context_from_policy(inode,
 								    &policy);
-	} else if (ret == sizeof(ctx) &&
-		   is_encryption_context_consistent_with_policy(&ctx,
-								&policy)) {
-		/* The file already uses the same encryption policy. */
-		ret = 0;
-	} else if (ret >= 0 || ret == -ERANGE) {
-		/* The file already uses a different encryption policy. */
-		ret = -EEXIST;
+	} else if (!is_encryption_context_consistent_with_policy(inode,
+								 &policy)) {
+		printk(KERN_WARNING
+		       "%s: Policy inconsistent with encryption context\n",
+		       __func__);
+		ret = -EINVAL;
 	}
 
 	inode_unlock(inode);
@@ -134,14 +135,6 @@ int fscrypt_ioctl_get_policy(struct file *filp, void __user *arg)
 	policy.contents_encryption_mode = ctx.contents_encryption_mode;
 	policy.filenames_encryption_mode = ctx.filenames_encryption_mode;
 	policy.flags = ctx.flags;
-
-	/* in compliance with android */
-	if (S_ISDIR(inode->i_mode) &&
-		policy.contents_encryption_mode !=
-		FS_ENCRYPTION_MODE_INVALID)
-		policy.contents_encryption_mode =
-			FS_ENCRYPTION_MODE_AES_256_XTS;
-
 	memcpy(policy.master_key_descriptor, ctx.master_key_descriptor,
 				FS_KEY_DESCRIPTOR_SIZE);
 
