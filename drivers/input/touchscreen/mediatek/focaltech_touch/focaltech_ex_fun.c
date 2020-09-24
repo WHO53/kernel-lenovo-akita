@@ -306,8 +306,8 @@ static int fts_debug_write(
     struct fts_ts_data *ts_data = fts_data;
     struct ftxxxx_proc *proc = &ts_data->proc;
 
-    if ((buflen <= 1) || (buflen > PAGE_SIZE)) {
-        FTS_ERROR("apk proc wirte count(%d>%d) fail", buflen, (int)PAGE_SIZE);
+	if ((len == 0) || (len > PROC_WRITE_BUF_SIZE)) {
+		FTS_ERROR("apk proc write count(%d) fail", (int)len);
         return -EINVAL;
     }
 
