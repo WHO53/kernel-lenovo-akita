@@ -2275,6 +2275,10 @@ struct task_struct {
 	u64 badness;
 #endif
 
+#ifdef CONFIG_ANDROID_SIMPLE_LMK
+	struct task_struct		*simple_lmk_next;
+#endif
+
 /* CPU-specific state of this task */
 	struct thread_struct thread;
 /*
