@@ -2573,14 +2573,15 @@ int mtk_pctrl_init(struct platform_device *pdev,
 			return -EINVAL;
 		}
 
-		/* Only 8135 has two base addr, other SoCs have only one. */
-		node = of_parse_phandle(np, "mediatek,pctl-regmap", 1);
-		if (node) {
-			pctl->regmap2 = syscon_node_to_regmap(node);
-			if (IS_ERR(pctl->regmap2))
-				return PTR_ERR(pctl->regmap2);
-		}
 #if defined(CONFIG_PINCTRL_MTK_NO_UPSTREAM)
+	node = of_parse_phandle(np, "mediatek,pctl-regmap", 0);
+	if (node) {
+		pctl->regmap1 = syscon_node_to_regmap(node);
+		of_node_put(node);
+		if (IS_ERR(pctl->regmap1))
+			return PTR_ERR(pctl->regmap1);
+	} else if (regmap) {
+		pctl->regmap1  = regmap;
 	} else {
 		for (i = 0; i < data->regmap_num; i++) {
 			node = of_parse_phandle(np, "mediatek,pctl-regmap", i);
@@ -2592,6 +2593,16 @@ int mtk_pctrl_init(struct platform_device *pdev,
 		}
 	}
 #endif
+
+	/* Only 8135 has two base addr, other SoCs have only one. */
+	node = of_parse_phandle(np, "mediatek,pctl-regmap", 1);
+	if (node) {
+		pctl->regmap2 = syscon_node_to_regmap(node);
+		of_node_put(node);
+		if (IS_ERR(pctl->regmap2))
+			return PTR_ERR(pctl->regmap2);
+	}
+
 	pctl->devdata = data;
 	ret = mtk_pctrl_build_state(pdev);
 	if (ret) {
