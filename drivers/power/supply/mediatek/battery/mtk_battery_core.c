@@ -1777,7 +1777,7 @@ void fg_bat_temp_int_sw_check(void)
 	if (gm.disableGM30)
 		return;
 
-	bm_err(
+	bm_debug(
 		"[%s] tmp %d lt %d ht %d\n",
 		__func__,
 		tmp, gm.fg_bat_tmp_lt,
@@ -2214,7 +2214,7 @@ void fg_nafg_int_handler(void)
 	gm.hw_status.sw_car_nafg_c_dltv = nafg_c_dltv;
 
 	gm3_log_dump_nafg(0);
-	bm_err(
+	bm_debug(
 		"[%s][fg_bat_nafg] [%d:%d:%d]\n",
 		__func__,
 		nafg_cnt, nafg_dltv, nafg_c_dltv);
@@ -4353,7 +4353,7 @@ void gm3_log_dump_nafg(int type)
 #endif
 	system_time = fg_get_system_sec();
 
-	bm_err("%s %d %llu %d %d %d %d %d\n",
+	bm_debug("%s %d %llu %d %d %d %d %d\n",
 		title,
 		system_time,
 		logtime,
