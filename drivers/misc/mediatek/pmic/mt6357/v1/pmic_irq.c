@@ -679,7 +679,7 @@ static void pmic_sp_irq_handler(unsigned int spNo,
 	if (sp_int_status == 0)
 		return; /* this subpack control has no interrupt triggered */
 
-	pr_notice(PMICTAG "[PMIC_INT] Reg[0x%x]=0x%x\n"
+	pr_debug(PMICTAG "[PMIC_INT] Reg[0x%x]=0x%x\n"
 		  , (sp_interrupts[spNo].status + 0x2 * sp_conNo)
 		  , sp_int_status);
 

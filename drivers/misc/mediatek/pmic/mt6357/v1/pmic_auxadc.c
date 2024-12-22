@@ -212,7 +212,7 @@ static int wk_bat_temp_dbg(int bat_temp_prev, int bat_temp)
 #endif
 			arr_bat_temp[i] =
 				auxadc_priv_read_channel(AUXADC_BAT_TEMP);
-			pr_notice("[CH3_DBG] %d,%d,%d\n",
+			pr_debug("[CH3_DBG] %d,%d,%d\n",
 				  bat, bat_cur, arr_bat_temp[i]);
 		}
 		bat_temp_new = bat_temp_filter(arr_bat_temp, 5);
@@ -484,7 +484,7 @@ int pmic_get_auxadc_value(int list)
 		is_charging = gauge_get_current(&bat_cur);
 		if (is_charging == 0)
 			bat_cur = 0 - bat_cur;
-		pr_notice("[CH3_DBG] bat_cur = %d\n", bat_cur);
+		pr_debug("[CH3_DBG] bat_cur = %d\n", bat_cur);
 	}
 #endif
 	if (list == AUXADC_LIST_HPOFS_CAL) {
