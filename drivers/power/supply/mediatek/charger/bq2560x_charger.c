@@ -874,7 +874,7 @@ static void bq2560x_dump_regs(struct bq2560x *bq)
 		msleep(2);
 		ret = bq2560x_read_byte(bq, addr, &val);
 		if (!ret)
-	        	pr_err("Reg[%.2x] = 0x%.2x\n", addr, val);
+	        	pr_debug("Reg[%.2x] = 0x%.2x\n", addr, val);
 	}
 }
 
@@ -948,7 +948,7 @@ static int bq2560x_charging(struct charger_device *chg_dev, bool enable)
 	else
 		ret = bq2560x_disable_charger(bq);
 
-	pr_err("%s charger %s\n", enable ? "enable" : "disable",
+	pr_debug("%s charger %s\n", enable ? "enable" : "disable",
 	       !ret ? "successfully" : "failed");
 
 	ret = bq2560x_read_byte(bq, BQ2560X_REG_01, &val);
@@ -1022,7 +1022,7 @@ static int bq2560x_set_ichg(struct charger_device *chg_dev, u32 curr)
 {
 	struct bq2560x *bq = dev_get_drvdata(&chg_dev->dev);
 
-	pr_err("charge curr = %d\n", curr);
+	pr_debug("charge curr = %d\n", curr);
 
 	return bq2560x_set_chargecurrent(bq, curr / 1000);
 }
@@ -1081,7 +1081,7 @@ static int bq2560x_set_ivl(struct charger_device *chg_dev, u32 volt)
 {
 	struct bq2560x *bq = dev_get_drvdata(&chg_dev->dev);
 
-	pr_err("vindpm volt = %d\n", volt);
+	pr_debug("vindpm volt = %d\n", volt);
 
 	return bq2560x_set_input_volt_limit(bq, volt / 1000);
 
@@ -1091,7 +1091,7 @@ static int bq2560x_set_icl(struct charger_device *chg_dev, u32 curr)
 {
 	struct bq2560x *bq = dev_get_drvdata(&chg_dev->dev);
 
-	pr_err("indpm curr = %d\n", curr);
+	pr_debug("indpm curr = %d\n", curr);
 
 	return bq2560x_set_input_current_limit(bq, curr / 1000);
 }
