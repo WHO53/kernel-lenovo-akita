@@ -492,7 +492,7 @@ bool mtk_pe40_is_ready(struct charger_manager *pinfo)
 
 	ret = mtk_pe40_get_ibus(pinfo, &ibus);
 
-	chr_err("pe40_ready:%d hv:%d thermal:%d,%d tmp:%d,%d,%d pps:%d en:%d ibus:%d %d\n",
+	chr_debug("pe40_ready:%d hv:%d thermal:%d,%d tmp:%d,%d,%d pps:%d en:%d ibus:%d %d\n",
 		pinfo->enable_pe_4,
 		pinfo->enable_hv_charging,
 		pdata->thermal_charging_current_limit,
