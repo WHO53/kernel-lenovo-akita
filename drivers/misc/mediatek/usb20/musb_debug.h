@@ -75,7 +75,7 @@ static inline int _dbg_level(unsigned int level)
 #ifdef DBG
 #undef DBG
 #endif
-#define DBG(level, fmt, args...) xprintk(level, fmt, ## args)
+#define DBG(level, fmt, args...) pr_debug(fmt, ## args)
 
 #define DBG_LIMIT(FREQ, fmt, args...) do {\
 	static DEFINE_RATELIMIT_STATE(ratelimit, HZ, FREQ);\
