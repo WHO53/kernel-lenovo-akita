@@ -1652,10 +1652,10 @@ static enum alarmtimer_restart
 	container_of(alarm, struct charger_manager, charger_timer);
 
 	if (info->is_suspend == false) {
-		chr_err("%s: not suspend, wake up charger\n", __func__);
+		chr_debug("%s: not suspend, wake up charger\n", __func__);
 		_wake_up_charger(info);
 	} else {
-		chr_err("%s: alarm timer timeout\n", __func__);
+		chr_debug("%s: alarm timer timeout\n", __func__);
 		__pm_stay_awake(&info->charger_wakelock);
 	}
 
@@ -1743,7 +1743,7 @@ static int charger_routine_thread(void *arg)
 		info->charger_thread_timeout = false;
 		bat_current = battery_get_bat_current();
 		chg_current = pmic_get_charging_current();
-		chr_err("Vbat=%d,Ibat=%d,I=%d,VChr=%d,T=%d,Soc=%d:%d,CT:%d:%d hv:%d pd:%d:%d\n",
+		chr_debug("Vbat=%d,Ibat=%d,I=%d,VChr=%d,T=%d,Soc=%d:%d,CT:%d:%d hv:%d pd:%d:%d\n",
 			battery_get_bat_voltage(), bat_current, chg_current,
 			battery_get_vbus(), battery_get_bat_temperature(),
 			battery_get_soc(), battery_get_uisoc(),

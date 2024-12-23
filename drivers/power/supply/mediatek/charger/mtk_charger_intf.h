@@ -64,7 +64,7 @@ do {								\
 #define chr_debug(fmt, args...)					\
 do {								\
 	if (chr_get_debug_level() >= CHRLOG_DEBUG_LEVEL) {	\
-		pr_notice(fmt, ##args);				\
+		pr_debug(fmt, ##args);				\
 	}							\
 } while (0)
 
