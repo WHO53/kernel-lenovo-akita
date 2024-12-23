@@ -1055,7 +1055,7 @@ static int bq2560x_set_vchg(struct charger_device *chg_dev, u32 volt)
 {
 	struct bq2560x *bq = dev_get_drvdata(&chg_dev->dev);
 
-	pr_err("charge volt = %d\n", volt);
+	pr_debug("charge volt = %d\n", volt);
 
 	return bq2560x_set_chargevolt(bq, volt / 1000);
 }
