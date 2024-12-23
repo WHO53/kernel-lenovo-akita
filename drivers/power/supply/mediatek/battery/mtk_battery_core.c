@@ -3145,7 +3145,7 @@ void bmd_ctrl_cmd_from_user(void *nl_data, struct fgd_nl_msg_t *ret_msg)
 		gauge_coulomb_start(&gm.coulomb_plus, gm.fg_bat_int1_gap);
 		gauge_coulomb_start(&gm.coulomb_minus, -gm.fg_bat_int1_gap);
 
-		bm_err(
+		bm_debug(
 			"[fr] FG_DAEMON_CMD_SET_FG_BAT_INT1_GAP = %d car:%d\n",
 			gm.fg_bat_int1_gap, fg_coulomb);
 	}
@@ -4024,7 +4024,7 @@ void bmd_ctrl_cmd_from_user(void *nl_data, struct fgd_nl_msg_t *ret_msg)
 
 		memcpy(&_soc, &msg->fgd_data[0], sizeof(_soc));
 		gauge_dev_set_info(gm.gdev, GAUGE_CON0_SOC, _soc);
-		bm_err("[fg_res] FG_DAEMON_CMD_SET_CON0_SOC = %d\n", _soc);
+		bm_debug("[fg_res] FG_DAEMON_CMD_SET_CON0_SOC = %d\n", _soc);
 	}
 	break;
 
@@ -4036,7 +4036,7 @@ void bmd_ctrl_cmd_from_user(void *nl_data, struct fgd_nl_msg_t *ret_msg)
 		ret_msg->fgd_data_len += sizeof(_soc);
 		memcpy(ret_msg->fgd_data, &_soc, sizeof(_soc));
 
-		bm_err("[fg_res] FG_DAEMON_CMD_GET_CON0_SOC = %d\n", _soc);
+		bm_debug("[fg_res] FG_DAEMON_CMD_GET_CON0_SOC = %d\n", _soc);
 
 	}
 	break;

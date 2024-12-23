@@ -362,7 +362,7 @@ void fg_bat_int1_handler(void)
 	set_fg_bat_int1_gap(fg_bat_int1_gap);
 	soc = fg_c_soc;
 
-	bm_err("[fg_bat_int1_handler]soc %d\n", soc);
+	bm_debug("[fg_bat_int1_handler]soc %d\n", soc);
 
 }
 
