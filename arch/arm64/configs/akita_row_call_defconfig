@@ -490,3 +490,4 @@ CONFIG_VT=y
 CONFIG_ANDROID_BINDER_DEVICES="binder,hwbinder,vndbinder,anbox-binder,anbox-hwbinder,anbox-vndbinder"
 CONFIG_WIREGUARD=y
 CONFIG_V4L2_LOOPBACK=y
+CONFIG_WLAN_DRV_BUILD_IN=y
