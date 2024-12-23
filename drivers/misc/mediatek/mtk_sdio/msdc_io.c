@@ -83,7 +83,7 @@ void msdc_ldo_power(u32 on, struct regulator *reg, int voltage_mv, u32 *status)
 			msdc_regulator_set_and_enable(reg, voltage_uv);
 			*status = voltage_uv;
 		} else if (*status == voltage_uv) {
-			pr_err("msdc power on <%d> again!\n", voltage_uv);
+			pr_debug("msdc power on <%d> again!\n", voltage_uv);
 		} else {
 			pr_warn("msdc change<%d> to <%d>\n",
 				*status, voltage_uv);
@@ -97,7 +97,7 @@ void msdc_ldo_power(u32 on, struct regulator *reg, int voltage_mv, u32 *status)
 			regulator_disable(reg);
 			*status = 0;
 		} else {
-			pr_err("msdc not power on\n");
+			pr_debug("msdc not power on\n");
 		}
 	}
 }
@@ -114,7 +114,7 @@ void msdc_dump_ldo_sts(struct msdc_host *host)
 			SHIFT_VEMC_EN);
 		pmic_read_interface_nolock(REG_VEMC_VOSEL, &ldo_vol,
 			MASK_VEMC_VOSEL, SHIFT_VEMC_VOSEL);
-		pr_err(" VEMC_EN=0x%x, VEMC_VOL=0x%x [1b'0(3V),1b'1(3.3V)]\n",
+		pr_debug(" VEMC_EN=0x%x, VEMC_VOL=0x%x [1b'0(3V),1b'1(3.3V)]\n",
 			ldo_en, ldo_vol);
 		break;
 	case 1:
@@ -122,22 +122,22 @@ void msdc_dump_ldo_sts(struct msdc_host *host)
 			SHIFT_VMC_EN);
 		pmic_read_interface_nolock(REG_VMC_VOSEL, &ldo_vol,
 			MASK_VMC_VOSEL, SHIFT_VMC_VOSEL);
-		pr_err(" VMC_EN=0x%x, VMC_VOL=0x%x [3b'101(2.9V),3b'011(1.8V)]\n",
+		pr_debug(" VMC_EN=0x%x, VMC_VOL=0x%x [3b'101(2.9V),3b'011(1.8V)]\n",
 			ldo_en, ldo_vol);
 		pmic_read_interface_nolock(REG_VMC_VOSEL_CAL, &ldo_vol,
 			MASK_VMC_VOSEL_CAL, SHIFT_VMC_VOSEL_CAL);
-		pr_err(" VMC_CAL=0x%x\n", ldo_vol);
+		pr_debug(" VMC_CAL=0x%x\n", ldo_vol);
 
 		pmic_read_interface_nolock(REG_VMCH_EN, &ldo_en, MASK_VMCH_EN,
 			SHIFT_VMCH_EN);
 		pmic_read_interface_nolock(REG_VMCH_VOSEL, &ldo_vol,
 			MASK_VMCH_VOSEL, SHIFT_VMCH_VOSEL);
-		pr_err(" VMCH_EN=0x%x, VMCH_VOL=0x%x [1b'0(3V),1b'1(3.3V)]\n",
+		pr_debug(" VMCH_EN=0x%x, VMCH_VOL=0x%x [1b'0(3V),1b'1(3.3V)]\n",
 			ldo_en, ldo_vol);
 
 		pmic_read_interface_nolock(REG_VMCH_VOSEL_CAL, &ldo_vol,
 			MASK_VMCH_VOSEL_CAL, SHIFT_VMCH_VOSEL_CAL);
-		pr_err(" VMCH_CAL=0x%x\n", ldo_vol);
+		pr_debug(" VMCH_CAL=0x%x\n", ldo_vol);
 
 		break;
 	default:
@@ -219,7 +219,7 @@ void msdc_power_calibration_init(struct msdc_host *host)
 		pmic_read_interface(REG_VMCH_VOSEL_CAL, &val,
 			MASK_VMCH_VOSEL_CAL, SHIFT_VMCH_VOSEL_CAL);
 
-		pr_err("msdc1, 0xACE=%x\n", val);
+		pr_debug("msdc1, 0xACE=%x\n", val);
 
 		if (val < 5)
 			val = 0x20 + val - 5;
@@ -229,7 +229,7 @@ void msdc_power_calibration_init(struct msdc_host *host)
 		pmic_config_interface(REG_VMCH_VOSEL_CAL, val,
 			MASK_VMCH_VOSEL_CAL, SHIFT_VMCH_VOSEL_CAL);
 
-		pr_err("msdc1, 0xACE=%x\n", val);
+		pr_debug("msdc1, 0xACE=%x\n", val);
 
 		/* VMC vosel is 2.8V with some calibration value,
 		 * Add extra 100mV calibration value to get tar VMC = 2.9V
@@ -237,7 +237,7 @@ void msdc_power_calibration_init(struct msdc_host *host)
 		pmic_read_interface(REG_VMC_VOSEL_CAL, &val,
 			MASK_VMC_VOSEL_CAL, SHIFT_VMC_VOSEL_CAL);
 
-		pr_err("msdc1, 0xAE2=%x\n", val);
+		pr_debug("msdc1, 0xAE2=%x\n", val);
 
 		if (val < 0x1b)
 			val = 0x20 + val - 0x1b;
@@ -262,7 +262,7 @@ void msdc_oc_check(struct msdc_host *host)
 			MASK_VMCH_OC_STATUS, SHIFT_VMCH_OC_STATUS);
 
 		if (val) {
-			pr_err("msdc1 OC status = %x\n", val);
+			pr_debug("msdc1 OC status = %x\n", val);
 			host->power_control(host, 0);
 		}
 	}
@@ -325,7 +325,7 @@ void msdc_sd_power_off(void)
 	struct msdc_host *host = mtk_msdc_host[1];
 
 	if (host) {
-		pr_err("Power Off, SD card\n");
+		pr_debug("Power Off, SD card\n");
 
 		/* power must be on */
 		g_msdc1_io = VOL_3000 * 1000;
@@ -405,7 +405,7 @@ int msdc_get_ccf_clk_pointer(struct platform_device *pdev,
 	host->clock_control = devm_clk_get(&pdev->dev, clk_names[pdev->id]);
 
 	if (IS_ERR(host->clock_control)) {
-		pr_err("can not get msdc%d clock control\n", pdev->id);
+		pr_debug("can not get msdc%d clock control\n", pdev->id);
 		return 1;
 	}
 
@@ -428,7 +428,7 @@ void msdc_select_clksrc(struct msdc_host *host, int clksrc)
 
 	hclks = msdc_get_hclks(host->id);
 
-	pr_err("[%s]: msdc%d select clk_src as %d(%dKHz)\n", __func__,
+	pr_debug("[%s]: msdc%d select clk_src as %d(%dKHz)\n", __func__,
 		host->id, clksrc, (hclks[clksrc]/1000));
 
 	host->hclk = hclks[clksrc];
@@ -441,26 +441,26 @@ void msdc_dump_clock_sts(void)
 
 	if (apmixed_reg_base && topckgen_reg_base && infracfg_ao_reg_base) {
 		reg = apmixed_reg_base + MSDCPLL_PWR_CON0_OFFSET;
-		pr_err(" MSDCPLL_PWR_CON0[0x%p][bit0~1 should be 2b'01]=0x%x\n",
+		pr_debug(" MSDCPLL_PWR_CON0[0x%p][bit0~1 should be 2b'01]=0x%x\n",
 			reg, MSDC_READ32(reg));
 		reg = apmixed_reg_base + MSDCPLL_CON0_OFFSET;
-		pr_err(" MSDCPLL_CON0    [0x%p][bit0 should be 1b'1]=0x%x\n",
+		pr_debug(" MSDCPLL_CON0    [0x%p][bit0 should be 1b'1]=0x%x\n",
 			reg, MSDC_READ32(reg));
 
 		reg = topckgen_reg_base + MSDC_CLK_CFG_3_OFFSET;
-		pr_err(" CLK_CFG_3       [0x%p][bit[19:16]should be 0x1]=0x%x\n",
+		pr_debug(" CLK_CFG_3       [0x%p][bit[19:16]should be 0x1]=0x%x\n",
 			reg, MSDC_READ32(reg));
-		pr_err(" CLK_CFG_3       [0x%p][bit[27:24]should be 0x7]=0x%x\n",
+		pr_debug(" CLK_CFG_3       [0x%p][bit[27:24]should be 0x7]=0x%x\n",
 			reg, MSDC_READ32(reg));
 		reg = topckgen_reg_base + MSDC_CLK_CFG_4_OFFSET;
-		pr_err(" CLK_CFG_4       [0x%p][bit[3:0]should be 0x7]=0x%x\n",
+		pr_debug(" CLK_CFG_4       [0x%p][bit[3:0]should be 0x7]=0x%x\n",
 			reg, MSDC_READ32(reg));
 
 		reg = infracfg_ao_reg_base + MSDC_INFRA_PDN_STA1_OFFSET;
-		pr_err(" MODULE_SW_CG_1  [0x%p][bit2=msdc0, bit4=msdc1, bit5=msdc2, 0:on,1:off]=0x%x\n",
+		pr_debug(" MODULE_SW_CG_1  [0x%p][bit2=msdc0, bit4=msdc1, bit5=msdc2, 0:on,1:off]=0x%x\n",
 			reg, MSDC_READ32(reg));
 	} else {
-		pr_err(" apmixed_reg_base = %p, topckgen_reg_base = %p, clk_infra_base = %p\n",
+		pr_debug(" apmixed_reg_base = %p, topckgen_reg_base = %p, clk_infra_base = %p\n",
 			apmixed_reg_base, topckgen_reg_base, infracfg_ao_reg_base);
 	}
 }
@@ -494,86 +494,86 @@ void msdc_dump_padctl_by_id(u32 id)
 {
 	switch (id) {
 	case 0:
-		pr_err("MSDC0 MODE18[0x%p] =0x%8x\tshould:0x12-- ----\n",
+		pr_debug("MSDC0 MODE18[0x%p] =0x%8x\tshould:0x12-- ----\n",
 			MSDC0_GPIO_MODE18, MSDC_READ32(MSDC0_GPIO_MODE18));
-		pr_err("MSDC0 MODE19[0x%p] =0x%8x\tshould:0x1249 1249\n",
+		pr_debug("MSDC0 MODE19[0x%p] =0x%8x\tshould:0x1249 1249\n",
 			MSDC0_GPIO_MODE19, MSDC_READ32(MSDC0_GPIO_MODE19));
-		pr_err("MSDC0 IES   [0x%p] =0x%8x\tshould:0x---- --1F\n",
+		pr_debug("MSDC0 IES   [0x%p] =0x%8x\tshould:0x---- --1F\n",
 			MSDC0_GPIO_IES_ADDR, MSDC_READ32(MSDC0_GPIO_IES_ADDR));
-		pr_err("MSDC0 SMT   [0x%p] =0x%8x\tshould:0x---- --1F\n",
+		pr_debug("MSDC0 SMT   [0x%p] =0x%8x\tshould:0x---- --1F\n",
 			MSDC0_GPIO_SMT_ADDR, MSDC_READ32(MSDC0_GPIO_SMT_ADDR));
-		pr_err("MSDC0 TDSEL [0x%p] =0x%8x\tshould:0x---0 0000\n",
+		pr_debug("MSDC0 TDSEL [0x%p] =0x%8x\tshould:0x---0 0000\n",
 			MSDC0_GPIO_TDSEL_ADDR,
 			MSDC_READ32(MSDC0_GPIO_TDSEL_ADDR));
-		pr_err("MSDC0 RDSEL [0x%p] =0x%8x\tshould:0x0000 0000\n",
+		pr_debug("MSDC0 RDSEL [0x%p] =0x%8x\tshould:0x0000 0000\n",
 			MSDC0_GPIO_RDSEL_ADDR,
 			MSDC_READ32(MSDC0_GPIO_RDSEL_ADDR));
-		pr_err("MSDC0 SR    [0x%p] =0x%8x\n",
+		pr_debug("MSDC0 SR    [0x%p] =0x%8x\n",
 			MSDC0_GPIO_SR_ADDR,
 			MSDC_READ32(MSDC0_GPIO_SR_ADDR));
-		pr_err("MSDC0 DRV   [0x%p] =0x%8x\n",
+		pr_debug("MSDC0 DRV   [0x%p] =0x%8x\n",
 			MSDC0_GPIO_DRV_ADDR,
 			MSDC_READ32(MSDC0_GPIO_DRV_ADDR));
-		pr_err("MSDC0 PULL0 [0x%p] =0x%8x\n",
+		pr_debug("MSDC0 PULL0 [0x%p] =0x%8x\n",
 			MSDC0_GPIO_PUPD0_ADDR,
 			MSDC_READ32(MSDC0_GPIO_PUPD0_ADDR));
-		pr_err("P-NONE: 0x4444 4444, PU:0x2111 1161, PD:0x6666 6666\n");
-		pr_err("MSDC0 PULL1 [0x%p] =0x%8x\n",
+		pr_debug("P-NONE: 0x4444 4444, PU:0x2111 1161, PD:0x6666 6666\n");
+		pr_debug("MSDC0 PULL1 [0x%p] =0x%8x\n",
 			MSDC0_GPIO_PUPD1_ADDR,
 			MSDC_READ32(MSDC0_GPIO_PUPD1_ADDR));
-		pr_err("P-NONE: 0x---- 4444, PU:0x---- 6111, PD:0x---- 6666\n");
+		pr_debug("P-NONE: 0x---- 4444, PU:0x---- 6111, PD:0x---- 6666\n");
 		break;
 
 	case 1:
-		pr_err("MSDC1 MODE4 [0x%p] =0x%8x\tshould:0x---1 1249\n",
+		pr_debug("MSDC1 MODE4 [0x%p] =0x%8x\tshould:0x---1 1249\n",
 			MSDC1_GPIO_MODE4, MSDC_READ32(MSDC1_GPIO_MODE4));
-		pr_err("MSDC1 IES   [0x%p] =0x%8x\tshould:0x----   -7--\n",
+		pr_debug("MSDC1 IES   [0x%p] =0x%8x\tshould:0x----   -7--\n",
 			MSDC1_GPIO_IES_ADDR, MSDC_READ32(MSDC1_GPIO_IES_ADDR));
-		pr_err("MSDC1 SMT   [0x%p] =0x%8x\tshould:0x----   -7--\n",
+		pr_debug("MSDC1 SMT   [0x%p] =0x%8x\tshould:0x----   -7--\n",
 			MSDC1_GPIO_SMT_ADDR, MSDC_READ32(MSDC1_GPIO_SMT_ADDR));
-		pr_err("MSDC1 TDSEL [0x%p] =0x%8x\n",
+		pr_debug("MSDC1 TDSEL [0x%p] =0x%8x\n",
 			MSDC1_GPIO_TDSEL_ADDR,
 			MSDC_READ32(MSDC1_GPIO_TDSEL_ADDR));
 		/* FIX ME: Check why sleep shall set as F */
-		pr_err("should 1.8v: sleep:0x---- -FFF, awake:0x---- -AAA\n");
-		pr_err("MSDC1 RDSEL0[0x%p] =0x%8x\n",
+		pr_debug("should 1.8v: sleep:0x---- -FFF, awake:0x---- -AAA\n");
+		pr_debug("MSDC1 RDSEL0[0x%p] =0x%8x\n",
 			MSDC1_GPIO_RDSEL0_ADDR,
 			MSDC_READ32(MSDC1_GPIO_RDSEL0_ADDR));
-		pr_err("1.8V: 0x-000 ----, 3.3v: 0x-30C ----\n");
-		pr_err("MSDC1 RDSEL1[0x%p] =0x%8x\n",
+		pr_debug("1.8V: 0x-000 ----, 3.3v: 0x-30C ----\n");
+		pr_debug("MSDC1 RDSEL1[0x%p] =0x%8x\n",
 			MSDC1_GPIO_RDSEL1_ADDR,
 			MSDC_READ32(MSDC1_GPIO_RDSEL1_ADDR));
-		pr_err("should 1.8V: 0x-000 ----, 3.3v: 0x---- ---C\n");
-		pr_err("MSDC1 SR    [0x%p] =0x%8x\n",
+		pr_debug("should 1.8V: 0x-000 ----, 3.3v: 0x---- ---C\n");
+		pr_debug("MSDC1 SR    [0x%p] =0x%8x\n",
 			MSDC1_GPIO_SR_ADDR, MSDC_READ32(MSDC1_GPIO_SR_ADDR));
-		pr_err("MSDC1 DRV   [0x%p] =0x%8x\n",
+		pr_debug("MSDC1 DRV   [0x%p] =0x%8x\n",
 			MSDC1_GPIO_DRV_ADDR, MSDC_READ32(MSDC1_GPIO_DRV_ADDR));
-		pr_err("MSDC1 PULL  [0x%p] =0x%8x\n",
+		pr_debug("MSDC1 PULL  [0x%p] =0x%8x\n",
 			MSDC1_GPIO_PUPD_ADDR,
 			MSDC_READ32(MSDC1_GPIO_PUPD_ADDR));
-		pr_err("P-NONE: 0x--44 4444, PU:0x--22 2262, PD:0x--66 6666\n");
+		pr_debug("P-NONE: 0x--44 4444, PU:0x--22 2262, PD:0x--66 6666\n");
 		break;
 
 #ifdef CFG_DEV_MSDC2
 	case 2:
-		pr_err("MSDC2 MODE14[0x%p][21:3]  =0x%8x\tshould:0x--0x12 2490\n",
+		pr_debug("MSDC2 MODE14[0x%p][21:3]  =0x%8x\tshould:0x--0x12 2490\n",
 			MSDC2_GPIO_MODE14, MSDC_READ32(MSDC2_GPIO_MODE14));
-		pr_err("MSDC2 IES   [0x%p][5:3]   =0x%8x\tshould:0x---- -38-\n",
+		pr_debug("MSDC2 IES   [0x%p][5:3]   =0x%8x\tshould:0x---- -38-\n",
 			MSDC2_GPIO_IES_ADDR, MSDC_READ32(MSDC2_GPIO_IES_ADDR));
-		pr_err("MSDC2 SMT   [0x%p][5:3]   =0x%8x\tshould:0x---- -38-\n",
+		pr_debug("MSDC2 SMT   [0x%p][5:3]   =0x%8x\tshould:0x---- -38-\n",
 			MSDC2_GPIO_SMT_ADDR, MSDC_READ32(MSDC2_GPIO_SMT_ADDR));
-		pr_err("MSDC2 TDSEL [0x%p][23:12] =0x%8xtshould:0x--0x--00 0---\n",
+		pr_debug("MSDC2 TDSEL [0x%p][23:12] =0x%8xtshould:0x--0x--00 0---\n",
 			MSDC2_GPIO_TDSEL_ADDR, MSDC_READ32(MSDC2_GPIO_TDSEL_ADDR));
-		pr_err("MSDC2 RDSEL0[0x%p][11:6]  =0x%8xtshould:0x--0x---- -00-\n",
+		pr_debug("MSDC2 RDSEL0[0x%p][11:6]  =0x%8xtshould:0x--0x---- -00-\n",
 			MSDC2_GPIO_RDSEL_ADDR, MSDC_READ32(MSDC2_GPIO_RDSEL_ADDR));
-		pr_err("MSDC2 SR DRV[0x%p][23:12] =0x%8x\n",
+		pr_debug("MSDC2 SR DRV[0x%p][23:12] =0x%8x\n",
 			MSDC2_GPIO_SR_ADDR, MSDC_READ32(MSDC2_GPIO_SR_ADDR));
-		pr_err("MSDC2 PULL  [0x%p][31:12] =0x%8x\n",
+		pr_debug("MSDC2 PULL  [0x%p][31:12] =0x%8x\n",
 			MSDC2_GPIO_PUPD_ADDR0, MSDC_READ32(MSDC2_GPIO_PUPD_ADDR0));
-		pr_err("P-NONE: 0x--44444, PU:0x--11611, PD:0x--66666\n");
-		pr_err("MSDC2 PULL  [0x%p][2:0] =0x%8x\n",
+		pr_debug("P-NONE: 0x--44444, PU:0x--11611, PD:0x--66666\n");
+		pr_debug("MSDC2 PULL  [0x%p][2:0] =0x%8x\n",
 			MSDC2_GPIO_PUPD_ADDR1, MSDC_READ32(MSDC2_GPIO_PUPD_ADDR1));
-		pr_err("P-NONE: 0x--4, PU:0x--1, PD:0x--6\n");
+		pr_debug("P-NONE: 0x--4, PU:0x--1, PD:0x--6\n");
 		break;
 #endif
 	}
@@ -599,7 +599,7 @@ void msdc_set_pin_mode(struct msdc_host *host)
 	case 3:
 		break;
 	default:
-		pr_err("[%s] invlalid host->id!\n", __func__);
+		pr_debug("[%s] invlalid host->id!\n", __func__);
 		break;
 
 	}
@@ -628,7 +628,7 @@ void msdc_set_ies_by_id(u32 id, int set_ies)
 	case 3:
 		break;
 	default:
-		pr_err("[%s] invlalid host->id!\n", __func__);
+		pr_debug("[%s] invlalid host->id!\n", __func__);
 		break;
 	}
 }
@@ -655,7 +655,7 @@ void msdc_set_smt_by_id(u32 id, int set_smt)
 	case 3:
 		break;
 	default:
-		pr_err("[%s] invlalid host->id!\n", __func__);
+		pr_debug("[%s] invlalid host->id!\n", __func__);
 		break;
 	}
 }
@@ -691,7 +691,7 @@ void msdc_set_tdsel_by_id(u32 id, u32 flag, u32 value)
 	case 3:
 		break;
 	default:
-		pr_err("[%s] invlalid host->id!\n", __func__);
+		pr_debug("[%s] invlalid host->id!\n", __func__);
 		break;
 	}
 }
@@ -731,7 +731,7 @@ void msdc_set_rdsel_by_id(u32 id, u32 flag, u32 value)
 	case 3:
 		break;
 	default:
-		pr_err("[%s] invlalid host->id!\n", __func__);
+		pr_debug("[%s] invlalid host->id!\n", __func__);
 		break;
 	}
 }
@@ -822,7 +822,7 @@ void msdc_set_sr_by_id(u32 id, int clk, int cmd, int dat, int rst, int ds)
 	case 3:
 		break;
 	default:
-		pr_err("[%s] invlalid host->id!\n", __func__);
+		pr_debug("[%s] invlalid host->id!\n", __func__);
 		break;
 	}
 
@@ -875,7 +875,7 @@ void msdc_set_driving_by_id(u32 id, struct msdc_hw *hw, bool sd_18)
 	case 3:
 		break;
 	default:
-		pr_err("[%s] invlalid host->id!\n", __func__);
+		pr_debug("[%s] invlalid host->id!\n", __func__);
 		break;
 	}
 }
@@ -932,7 +932,7 @@ void msdc_get_driving_by_id(u32 id, struct msdc_hw *hw)
 	case 3:
 		break;
 	default:
-		pr_err("[%s] invlalid host->id!\n", __func__);
+		pr_debug("[%s] invlalid host->id!\n", __func__);
 		break;
 	}
 }
@@ -1002,7 +1002,7 @@ void msdc_pin_config_by_id(u32 id, u32 mode)
 	case 3:
 		break;
 	default:
-		pr_err("[%s] invlalid host->id!\n", __func__);
+		pr_debug("[%s] invlalid host->id!\n", __func__);
 		break;
 	}
 
@@ -1100,7 +1100,7 @@ static int msdc_get_register_settings(struct msdc_host *host, struct device_node
 		of_property_read_u8(register_setting_node, "wdata_edge",
 				&host->hw->wdata_edge);
 	} else {
-		pr_err("[msdc%d] register_setting is not found in DT\n",
+		pr_debug("[msdc%d] register_setting is not found in DT\n",
 			host->id);
 	}
 
@@ -1122,7 +1122,7 @@ int msdc_of_parse(struct mmc_host *mmc)
 
 	ret = mmc_of_parse(mmc);
 	if (ret) {
-		pr_err("%s: mmc of parse error!!: %d\n", __func__, ret);
+		pr_debug("%s: mmc of parse error!!: %d\n", __func__, ret);
 		return ret;
 	}
 
@@ -1134,19 +1134,19 @@ int msdc_of_parse(struct mmc_host *mmc)
 	/* iomap register */
 	host->base = of_iomap(np, 0);
 	if (!host->base) {
-		pr_err("[msdc%d] of_iomap failed\n", mmc->index);
+		pr_debug("[msdc%d] of_iomap failed\n", mmc->index);
 		return -ENOMEM;
 	}
 
 	/* get irq # */
 	host->irq = irq_of_parse_and_map(np, 0);
-	pr_err("[msdc%d] get irq # %d\n", mmc->index, host->irq);
+	pr_debug("[msdc%d] get irq # %d\n", mmc->index, host->irq);
 	WARN_ON(host->irq < 0);
 
 	/* get clk_src */
 	#if !defined(FPGA_PLATFORM)
 	if (of_property_read_u32(np, "clk_src", &read_tmp)) {
-		pr_err("[msdc%d] error: clk_src isn't found in device tree.\n",
+		pr_debug("[msdc%d] error: clk_src isn't found in device tree.\n",
 			host->id);
 		WARN_ON(1);
 	} else {
@@ -1164,7 +1164,7 @@ int msdc_of_parse(struct mmc_host *mmc)
 	 */
 
 	if (of_property_read_u32(np, "host_function", &read_tmp)) {
-		pr_err("[msdc%d] host_function isn't found in device tree\n",
+		pr_debug("[msdc%d] host_function isn't found in device tree\n",
 			host->id);
 	} else {
 		host->hw->host_function = read_tmp;
@@ -1176,7 +1176,7 @@ int msdc_of_parse(struct mmc_host *mmc)
 	/* get cd_gpio and cd_level */
 	if (of_property_read_u32_index(np, "cd-gpios", 1, &cd_gpio) == 0) {
 		if (of_property_read_u8(np, "cd_level", &host->hw->cd_level))
-			pr_err("[msdc%d] cd_level isn't found in device tree\n",
+			pr_debug("[msdc%d] cd_level isn't found in device tree\n",
 				host->id);
 	}
 
@@ -1192,7 +1192,7 @@ int msdc_of_parse(struct mmc_host *mmc)
 	msdc_fpga_pwr_init();
 	#endif
 
-	pr_err("[msdc%d] host_function:%d, clk_src=%d\n", host->id, host->hw->host_function, host->hw->clk_src);
+	pr_debug("[msdc%d] host_function:%d, clk_src=%d\n", host->id, host->hw->host_function, host->hw->clk_src);
 #ifdef CFG_DEV_MSDC2
 	if (host->hw->host_function == MSDC_SDIO) {
 		host->hw->flags |= MSDC_EXT_SDIO_IRQ;
@@ -1221,7 +1221,7 @@ int msdc_dt_init(struct platform_device *pdev, struct mmc_host *mmc)
 	};
 	struct device_node *np;
 
-	pr_err("DT probe %s!\n", pdev->dev.of_node->name);
+	pr_debug("DT probe %s!\n", pdev->dev.of_node->name);
 
 	for (id = 0; id < HOST_MAX_NUM; id++) {
 		if (strcmp(pdev->dev.of_node->name, msdc_names[id]) == 0) {
@@ -1231,7 +1231,7 @@ int msdc_dt_init(struct platform_device *pdev, struct mmc_host *mmc)
 	}
 
 	if (id == HOST_MAX_NUM) {
-		pr_err("%s: Can not find msdc host\n", __func__);
+		pr_debug("%s: Can not find msdc host\n", __func__);
 		return 1;
 	}
 
@@ -1240,7 +1240,7 @@ int msdc_dt_init(struct platform_device *pdev, struct mmc_host *mmc)
 
 	ret = msdc_of_parse(mmc);
 	if (ret) {
-		pr_err("msdc%d of parse fail!!: %d\n", id, ret);
+		pr_debug("msdc%d of parse fail!!: %d\n", id, ret);
 		return ret;
 	}
 
@@ -1264,21 +1264,21 @@ int msdc_dt_init(struct platform_device *pdev, struct mmc_host *mmc)
 			np = of_find_compatible_node(NULL, NULL,
 				"mediatek,mt2701-dcm");
 			infracfg_ao_reg_base = of_iomap(np, 1);
-			pr_err("of_iomap for infracfg_ao base @ 0x%p\n",
+			pr_debug("of_iomap for infracfg_ao base @ 0x%p\n",
 				infracfg_ao_reg_base);
 		}
 
 		if (toprgu_reg_base == NULL) {
 			np = of_find_compatible_node(NULL, NULL, "mediatek,mt2701-rgu");
 			toprgu_reg_base = of_iomap(np, 0);
-			pr_err("of_iomap for toprgu base @ 0x%p\n",
+			pr_debug("of_iomap for toprgu base @ 0x%p\n",
 				toprgu_reg_base);
 		}
 
 		if (apmixed_reg_base == NULL) {
 			np = of_find_compatible_node(NULL, NULL, "mediatek,mt2701-apmixedsys");
 			apmixed_reg_base = of_iomap(np, 0);
-			pr_err("of_iomap for apmixed base @ 0x%p\n",
+			pr_debug("of_iomap for apmixed base @ 0x%p\n",
 				apmixed_reg_base);
 		}
 
@@ -1286,7 +1286,7 @@ int msdc_dt_init(struct platform_device *pdev, struct mmc_host *mmc)
 			np = of_find_compatible_node(NULL, NULL,
 				"mediatek,mt2701-topckgen");
 			topckgen_reg_base = of_iomap(np, 0);
-			pr_err("of_iomap for topckgen base @ 0x%p\n",
+			pr_debug("of_iomap for topckgen base @ 0x%p\n",
 				topckgen_reg_base);
 		}
 #endif
@@ -1309,21 +1309,21 @@ int msdc_dt_init(struct platform_device *pdev, struct mmc_host *mmc)
 			np = of_find_compatible_node(NULL, NULL,
 				"mediatek,mt2712-infracfg");
 			infracfg_ao_reg_base = of_iomap(np, 1);
-			pr_err("of_iomap for infracfg_ao base @ 0x%p\n",
+			pr_debug("of_iomap for infracfg_ao base @ 0x%p\n",
 				infracfg_ao_reg_base);
 		}
 
 		if (toprgu_reg_base == NULL) {
 			np = of_find_compatible_node(NULL, NULL, "mediatek,mt2712-rgu");
 			toprgu_reg_base = of_iomap(np, 0);
-			pr_err("of_iomap for toprgu base @ 0x%p\n",
+			pr_debug("of_iomap for toprgu base @ 0x%p\n",
 				toprgu_reg_base);
 		}
 
 		if (apmixed_reg_base == NULL) {
 			np = of_find_compatible_node(NULL, NULL, "mediatek,mt2712-apmixedsys");
 			apmixed_reg_base = of_iomap(np, 0);
-			pr_err("of_iomap for apmixed base @ 0x%p\n",
+			pr_debug("of_iomap for apmixed base @ 0x%p\n",
 				apmixed_reg_base);
 		}
 
@@ -1331,7 +1331,7 @@ int msdc_dt_init(struct platform_device *pdev, struct mmc_host *mmc)
 			np = of_find_compatible_node(NULL, NULL,
 				"mediatek,mt2712-topckgen");
 			topckgen_reg_base = of_iomap(np, 0);
-			pr_err("of_iomap for topckgen base @ 0x%p\n",
+			pr_debug("of_iomap for topckgen base @ 0x%p\n",
 				topckgen_reg_base);
 		}
 #endif
