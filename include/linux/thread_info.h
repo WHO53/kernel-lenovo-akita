@@ -14,7 +14,6 @@
 
 struct timespec;
 struct compat_timespec;
->>>>>>> 376a76aa92 (kernel, fs: Introduce and use set_restart_fn() and arch_set_restart_data())
 
 #ifdef CONFIG_THREAD_INFO_IN_TASK
 /*
