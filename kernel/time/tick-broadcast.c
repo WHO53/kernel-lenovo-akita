@@ -23,7 +23,7 @@
 
 #include "tick-internal.h"
 
-#define CONFIG_MTK_TICK_BROADCAST_AEE_DUMP
+#define CONFIG_MTK_TICK_BROADCAST_AEE_DUMP 0
 
 #if defined(CONFIG_MTK_RAM_CONSOLE)
 #if defined(CONFIG_MTK_TICK_BROADCAST_AEE_DUMP)
