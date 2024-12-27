@@ -369,9 +369,6 @@ void dump_wdk_bind_info(void)
 #ifdef CONFIG_MTK_AEE_IPANIC
 	aee_sram_fiq_log("\n");
 #endif
-	mtk_timer_clkevt_aee_dump();
-	tick_broadcast_mtk_aee_dump();
-	timer_list_aee_dump(kick_bit);
 }
 
 void kicker_cpu_bind(int cpu)
