@@ -1143,7 +1143,7 @@ static int primary_display_check_recovery_worker_kthread(void *data)
 			DISPCHECK("[ESD][videolfb] lcmname    = %s\n", mtkfb_lcm_name);
 			if(!strcmp(mtkfb_lcm_name, "ft8201_wxga_vdo_incell_boe") ||
 				!strcmp(mtkfb_lcm_name, "ft8201_wxga_vdo_incell_inx")){
-				DISPERR("[ESD]lcd_need_reset =%d\n",lcd_need_reset);
+				DISPDBG("[ESD]lcd_need_reset =%d\n",lcd_need_reset);
 				if(!lcd_need_reset)
 					break;
 			}else{
