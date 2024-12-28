@@ -42,7 +42,7 @@
 #define SUBSTREAM_FLAG_SYNC_EP_STARTED	1
 
 #define MTK_SND_USB_DBG(fmt, args...) \
-	pr_notice("<%s(), %d> " fmt, __func__, __LINE__, ## args)
+	pr_debug("<%s(), %d> " fmt, __func__, __LINE__, ## args)
 
 #define mtk_pr_info(FREQ, fmt, args...) do {\
 	static DEFINE_RATELIMIT_STATE(ratelimit, HZ, FREQ);\

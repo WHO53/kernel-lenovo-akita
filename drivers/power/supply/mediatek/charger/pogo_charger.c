@@ -93,7 +93,7 @@ static bool is_lenovo_anna(void);
 static ssize_t show_otg_off_delay(struct device *dev,
         struct device_attribute *attr, char *buf)
 {
-    pr_info("otg_off_delay = %d\n", otg_off_delay);
+    pr_debug("otg_off_delay = %d\n", otg_off_delay);
     return sprintf(buf, "%u\n", otg_off_delay);
 }
 
@@ -105,7 +105,7 @@ static ssize_t store_otg_off_delay(struct device *dev,
     rv = kstrtouint(buf, 0, &otg_off_delay);
     if (rv != 0)
         return -EINVAL;
-    pr_info("otg_off_delay = %d\n", otg_off_delay);
+    pr_debug("otg_off_delay = %d\n", otg_off_delay);
     return size;
 }
 
@@ -115,7 +115,7 @@ static DEVICE_ATTR(otg_off_delay, 0664, show_otg_off_delay, store_otg_off_delay)
 static ssize_t show_otg_on_delay(struct device *dev,
         struct device_attribute *attr, char *buf)
 {
-    pr_info("otg_on_delay = %d\n", otg_on_delay);
+    pr_debug("otg_on_delay = %d\n", otg_on_delay);
     return sprintf(buf, "%u\n", otg_on_delay);
 }
 
@@ -127,7 +127,7 @@ static ssize_t store_otg_on_delay(struct device *dev,
     rv = kstrtouint(buf, 0, &otg_on_delay);
     if (rv != 0)
         return -EINVAL;
-    pr_info("otg_on_delay = %d\n", otg_on_delay);
+    pr_debug("otg_on_delay = %d\n", otg_on_delay);
     return size;
 }
 
@@ -137,7 +137,7 @@ static DEVICE_ATTR(otg_on_delay, 0664, show_otg_on_delay, store_otg_on_delay);
 static ssize_t show_wrx_off_delay(struct device *dev,
         struct device_attribute *attr, char *buf)
 {
-    pr_info("wrx_off_delay = %d\n", wrx_off_delay);
+    pr_debug("wrx_off_delay = %d\n", wrx_off_delay);
     return sprintf(buf, "%u\n", wrx_off_delay);
 }
 
@@ -149,7 +149,7 @@ static ssize_t store_wrx_off_delay(struct device *dev,
     rv = kstrtouint(buf, 0, &wrx_off_delay);
     if (rv != 0)
         return -EINVAL;
-    pr_info("wrx_off_delay = %d\n", wrx_off_delay);
+    pr_debug("wrx_off_delay = %d\n", wrx_off_delay);
     return size;
 }
 
@@ -159,7 +159,7 @@ static DEVICE_ATTR(wrx_off_delay, 0664, show_wrx_off_delay, store_wrx_off_delay)
 static ssize_t show_wrx_on_delay(struct device *dev,
         struct device_attribute *attr, char *buf)
 {
-    pr_info("wrx_on_delay = %d\n", wrx_on_delay);
+    pr_debug("wrx_on_delay = %d\n", wrx_on_delay);
     return sprintf(buf, "%u\n", wrx_on_delay);
 }
 
@@ -171,7 +171,7 @@ static ssize_t store_wrx_on_delay(struct device *dev,
     rv = kstrtouint(buf, 0, &wrx_on_delay);
     if (rv != 0)
         return -EINVAL;
-    pr_info("wrx_on_delay = %d\n", wrx_on_delay);
+    pr_debug("wrx_on_delay = %d\n", wrx_on_delay);
     return size;
 }
 
@@ -412,7 +412,7 @@ static int pogo_parse_dt(struct pogo_charger_info *info, struct device *dev)
 	info->en_gpio = ret;
 	gpio_request(info->en_gpio, "en_pin");
 	gpio_direction_output(info->en_gpio, 0);
-	pr_info("[%s]%d en_gpio = 0x%x\n", __func__, __LINE__, info->en_gpio);
+	pr_debug("[%s]%d en_gpio = 0x%x\n", __func__, __LINE__, info->en_gpio);
 
 	ret = of_get_named_gpio(np, "pogo,otg_gpio", 0);
 	if (ret < 0)
@@ -431,7 +431,7 @@ static int pogo_parse_dt(struct pogo_charger_info *info, struct device *dev)
 	info->wrx_gpio = ret;
 	gpio_request(info->wrx_gpio, "wrx_pin");
 	gpio_direction_output(info->wrx_gpio, 0);
-	pr_info("[%s]%d wrx_gpio = 0x%x\n", __func__, __LINE__, info->wrx_gpio);
+	pr_debug("[%s]%d wrx_gpio = 0x%x\n", __func__, __LINE__, info->wrx_gpio);
 
 	ret = of_get_named_gpio(np, "pogo,intr_pogo_0", 0);
 	if (ret < 0)
@@ -439,7 +439,7 @@ static int pogo_parse_dt(struct pogo_charger_info *info, struct device *dev)
 	info->pogo_intr_0 = ret;
 	gpio_request(info->pogo_intr_0, "intr_pin_0");
 	gpio_direction_input(info->pogo_intr_0);
-	pr_info("[%s]%d intr_pin_0 = 0x%x\n", __func__, __LINE__, info->pogo_intr_0);
+	pr_debug("[%s]%d intr_pin_0 = 0x%x\n", __func__, __LINE__, info->pogo_intr_0);
 
 	ret = of_get_named_gpio(np, "pogo,intr_pogo_1", 0);
 	if (ret < 0)
@@ -447,7 +447,7 @@ static int pogo_parse_dt(struct pogo_charger_info *info, struct device *dev)
 	info->pogo_intr_1 = ret;
 	gpio_request(info->pogo_intr_1, "intr_pin_0");
 	gpio_direction_input(info->pogo_intr_1);
-	pr_info("[%s]%d intr_pin_1 = 0x%x\n", __func__, __LINE__, info->pogo_intr_1);
+	pr_debug("[%s]%d intr_pin_1 = 0x%x\n", __func__, __LINE__, info->pogo_intr_1);
 
 	return 0;
 }
@@ -459,13 +459,13 @@ static int get_board_id(void)
 
 	s1 = strstr(saved_command_line, "board_id=");
 	if(!s1) {
-		pr_info("hw_id not found in cmdline\n");
+		pr_debug("hw_id not found in cmdline\n");
 		return -1;
 	}
 	s1 += strlen("board_id=");
 	strncpy(get_board, s1, 4);
 	get_board[4]='\0';
-	pr_info("board_id found in cmdline : %s\n", get_board);
+	pr_debug("board_id found in cmdline : %s\n", get_board);
 
 	return 0;
 }
@@ -473,10 +473,10 @@ static int get_board_id(void)
 static bool is_lenovo_anna(void)
 {
 	if (!strcmp(get_board, "Anna")){
-		pr_info("anan enable pogo\n");
+		pr_debug("anan enable pogo\n");
 		return 1;	
 	}else{
-		pr_info("not anan disable pogo\n");
+		pr_debug("not anan disable pogo\n");
 		return 0;
 	}	
 }
@@ -490,7 +490,7 @@ static void do_pogo_detection_work(struct work_struct *data)
         pogo_in_1 = gpio_get_value(info->pogo_intr_1);
         pogo_in_0 = gpio_get_value(info->pogo_intr_0);
 
-	pr_info("%s pogo_in_0:%d pogo_in_1:%d\n", __func__, pogo_in_0, pogo_in_1);
+	pr_debug("%s pogo_in_0:%d pogo_in_1:%d\n", __func__, pogo_in_0, pogo_in_1);
         if(pogo_in_1 == 1 && pogo_in_0 == 0)
                 mtk_pmic_enable_chr_type_det(1);
 
@@ -508,7 +508,7 @@ static int pogo_charger_probe(struct platform_device *pdev)
 	struct pogo_charger_info *info = NULL;
 	printk("bshui,-----%s----",__func__);
 
-	pr_info("[%s]\n", __func__);
+	pr_debug("[%s]\n", __func__);
 
 	get_board_id();
 	if(!is_lenovo_anna()){
@@ -579,7 +579,7 @@ static int pogo_charger_probe(struct platform_device *pdev)
         schedule_work(&chr_work);
 #endif
 
-	pr_info("[%s] check pogo status: %d \n", __func__, pogo_get_state());
+	pr_debug("[%s] check pogo status: %d \n", __func__, pogo_get_state());
 
 	ret_device_file = device_create_file(&(pdev->dev), &dev_attr_wrx_on_delay);
 	ret_device_file = device_create_file(&(pdev->dev), &dev_attr_wrx_off_delay);
@@ -593,7 +593,7 @@ static int pogo_charger_suspend(struct platform_device *pdev, pm_message_t state
 {
 	struct pogo_charger_info *info = platform_get_drvdata(pdev);
 
-	pr_info("pogo_charger_suspend\n");
+	pr_debug("pogo_charger_suspend\n");
 	if(!IS_ERR_OR_NULL(info))
 		down(&info->suspend_lock);
 	return 0;
@@ -603,7 +603,7 @@ static int pogo_charger_resume(struct platform_device *pdev)
 {
         struct pogo_charger_info *info = platform_get_drvdata(pdev);
 
-	pr_info("pogo_charger_resume\n");
+	pr_debug("pogo_charger_resume\n");
         if(!IS_ERR_OR_NULL(info))
                 up(&info->suspend_lock);
         return 0;

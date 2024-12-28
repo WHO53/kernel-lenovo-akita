@@ -143,9 +143,9 @@ struct DPE_CLK_STRUCT dpe_clk;
 #else
 #define log_dbg(format, args...)
 #endif
-#define LOG_ERR(format, args...)    pr_info(MyTag format,  ##args)
+#define LOG_ERR(format, args...)    pr_debug(MyTag format,  ##args)
 #define LOG_INF(format, args...)    pr_debug(MyTag format,  ##args)
-#define LOG_NOTICE(format, args...) pr_notice(MyTag format,  ##args)
+#define LOG_NOTICE(format, args...) pr_debug(MyTag format,  ##args)
 
 /* For other projects. */
 /* #define DPE_WR32(addr, data)    iowrite32(data, addr) */

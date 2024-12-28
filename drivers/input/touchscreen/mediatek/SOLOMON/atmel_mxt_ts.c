@@ -5068,7 +5068,7 @@ static int fb_notifier_callback(struct notifier_block *self,
 
 		} else if (*blank == FB_BLANK_POWERDOWN) {
 			if (flush_work(&mxt->fb_notify_work))
-				pr_warn("%s: waited resume worker finished\n", __func__);
+				pr_debug("%s: waited resume worker finished\n", __func__);
 
 			/* Disable general touch event reporting */
 			mxt_config_ctrl_clear(mxt, mxt->T100_address, 0x02);

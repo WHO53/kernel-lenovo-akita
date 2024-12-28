@@ -157,7 +157,7 @@ static u32 pmic_pwrap_read(u32 RegNum)
 
 	return_value = regmap_read(pwrap_regmap, RegNum, &pmic_reg);
 	if (return_value != 0) {
-		pr_notice(
+		pr_debug(
 			"[Power/PMIC][pmic_read_interface] Reg[%x]= pmic_wrap read data fail\n",
 			RegNum);
 		return return_value;
@@ -173,7 +173,7 @@ static u32 pmic_pwrap_write(u32 RegNum, u32 val)
 
 	return_value = regmap_read(pwrap_regmap, RegNum, &pmic_reg);
 	if (return_value != 0) {
-		pr_notice(
+		pr_debug(
 			"[Power/PMIC][pmic_config_interface] Reg[%x]= pmic_wrap read data fail\n",
 			RegNum);
 		return return_value;
@@ -184,7 +184,7 @@ static u32 pmic_pwrap_write(u32 RegNum, u32 val)
 
 	return_value = regmap_write(pwrap_regmap, RegNum, pmic_reg);
 	if (return_value != 0) {
-		pr_notice(
+		pr_debug(
 			"[Power/PMIC][pmic_config_interface] Reg[%x]= pmic_wrap read data fail\n",
 			RegNum);
 		return return_value;

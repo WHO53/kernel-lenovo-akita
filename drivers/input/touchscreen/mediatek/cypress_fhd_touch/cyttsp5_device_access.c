@@ -5388,7 +5388,7 @@ static int __init cyttsp5_device_access_init(void)
 			return rc;
 	}
 
-	pr_info("%s: Parade TTSP Device Access Driver (Built %s) rc=%d\n",
+	pr_debug("%s: Parade TTSP Device Access Driver (Built %s) rc=%d\n",
 		 __func__, CY_DRIVER_VERSION, rc);
 	return 0;
 }

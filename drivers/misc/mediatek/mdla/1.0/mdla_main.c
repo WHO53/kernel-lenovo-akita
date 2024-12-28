@@ -293,7 +293,7 @@ static void mdla_reset(int res)
 {
 	const char *str = mdla_get_reason_str(res);
 
-	pr_info("%s: MDLA RESET: %s(%d)\n", __func__,
+	pr_debug("%s: MDLA RESET: %s(%d)\n", __func__,
 		str, res);
 
 	// Enable Bus prot, start to turn off, set bus protect - step 1:0
@@ -512,7 +512,7 @@ static int mdla_probe(struct platform_device *pdev)
 		return rc;
 	}
 	apu_mdla_gsm_base = (void *) apu_mdla_gsm->start;
-	pr_info("%s: apu_mdla_gsm_top: %p, apu_mdla_gsm_base: %p\n",
+	pr_debug("%s: apu_mdla_gsm_top: %p, apu_mdla_gsm_base: %p\n",
 		__func__, apu_mdla_gsm_top, apu_mdla_gsm_base);
 
 	apu_conn_top = ioremap_nocache(apu_conn->start,
@@ -645,7 +645,7 @@ static int mdlactl_init(void)
 	 */
 
 	if (majorNumber < 0) {
-		pr_warn("MDLA failed to register a major number\n");
+		pr_debug("MDLA failed to register a major number\n");
 		return majorNumber;
 	}
 	mdla_drv_debug("MDLA: registered correctly with major number %d\n",
@@ -655,7 +655,7 @@ static int mdlactl_init(void)
 	mdlactlClass = class_create(THIS_MODULE, CLASS_NAME);
 	if (IS_ERR(mdlactlClass)) {  // Check for error and clean up if there is
 		unregister_chrdev(majorNumber, DEVICE_NAME);
-		pr_warn("Failed to register device class\n");
+		pr_debug("Failed to register device class\n");
 		return PTR_ERR(mdlactlClass);
 	}
 	// Register the device driver
@@ -663,7 +663,7 @@ static int mdlactl_init(void)
 	NULL, DEVICE_NAME);
 	if (IS_ERR(mdlactlDevice)) {  // Clean up if there is an error
 		unregister_chrdev(majorNumber, DEVICE_NAME);
-		pr_warn("Failed to create the device\n");
+		pr_debug("Failed to create the device\n");
 		return PTR_ERR(mdlactlDevice);
 	}
 
@@ -675,7 +675,7 @@ static int mdlactl_init(void)
 		ret = dma_set_mask_and_coherent(mdlactlDevice,
 					DMA_BIT_MASK(32));
 		if (ret)
-			pr_warn("MDLA: set DMA mask failed: %d\n", ret);
+			pr_debug("MDLA: set DMA mask failed: %d\n", ret);
 	}
 
 	INIT_WORK(&mdla_queue, mdla_start_queue);
