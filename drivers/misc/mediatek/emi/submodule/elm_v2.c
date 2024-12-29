@@ -72,11 +72,13 @@ void elm_init(struct platform_driver *emi_ctrl, struct platform_device *pdev)
 
 	pr_debug("[ELM] initialize EMI ELMv2\n");
 
+#if defined(CONFIG_MTK_DEBUG_LATCH)
 	LAST_EMI_BASE = get_dbg_info_base(0xE31C);
 	if (!LAST_EMI_BASE) {
 		pr_err("[ELM] get LAST_EMI_BASE fail\n");
 		return;
 	}
+#endif
 
 	elm_enabled = false;
 	if (readl(IOMEM(LAST_EMI_DECS_CTRL)) == 0xDECDDECD) {

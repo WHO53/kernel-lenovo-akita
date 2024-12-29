@@ -329,8 +329,10 @@ void bwl_init(struct platform_driver *emi_ctrl)
 	for (i = 0; i < MAX_CH; i++)
 		CHN_EMI_BASE[i] = mt_chn_emi_base_get(i);
 
+#if defined(CONFIG_MTK_DEBUG_LATCH)
 #ifdef DECS_ON_SSPM
 	LAST_EMI_BASE = get_dbg_info_base(0xE31C);
+#endif
 #endif
 
 	env = decode_bwl_env(get_dram_type(), get_ch_num(), get_rk_num());
