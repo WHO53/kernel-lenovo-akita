@@ -2314,7 +2314,9 @@ s32 cmdq_task_destroy(struct cmdqRecStruct *handle)
 		return -EINVAL;
 	}
 
+#if defined(CONFIG_TRACING) 
 	CMDQ_SYSTRACE_BEGIN("%s\n", __func__);
+#endif
 
 	CMDQ_MSG("release handle:0x%p pkt:0x%p state:%d exec:%d irq:%llu\n",
 		handle, handle->pkt, handle->state,
@@ -2363,7 +2365,9 @@ s32 cmdq_task_destroy(struct cmdqRecStruct *handle)
 	}
 	kfree(handle);
 
+#if defined(CONFIG_TRACING) 
 	CMDQ_SYSTRACE_END();
+#endif
 
 	return 0;
 }

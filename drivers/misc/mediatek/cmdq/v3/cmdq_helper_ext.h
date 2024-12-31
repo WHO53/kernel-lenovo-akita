@@ -199,6 +199,7 @@ do {if (1) mmprofile_log_ex(args); } while (0);	\
 #define CMDQ_PROF_MMP(args...)
 #endif
 
+#if defined(CONFIG_TRACING)
 /* CMDQ FTRACE */
 #define CMDQ_TRACE_FORCE_BEGIN(fmt, args...) do { \
 	preempt_disable(); \
@@ -225,6 +226,7 @@ do {if (1) mmprofile_log_ex(args); } while (0);	\
 		CMDQ_TRACE_FORCE_END(); \
 	} \
 } while (0)
+#endif
 
 #define CMDQ_GET_TIME_IN_MS(start, end, duration)	\
 {	\

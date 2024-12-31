@@ -1029,7 +1029,11 @@ static void select_task_prefer_cpu_fair(struct task_struct *p, int *result)
 
 	task_prefer = cpu_prefer(p);
 
+#ifdef CONFIG_MTK_SCHED_TRACERS
 	cpu = (*result & LB_CPU_MASK);
+#else
+	cpu = (*result);
+#endif
 
 	if (task_prefer_match(p, cpu))
 		return;
