@@ -158,10 +158,12 @@ void perfmgr_trace_log(char *module, const char *fmt, ...)
 	perfmgr_trace_printk(module, log);
 }
 
-#endif
+#else
 
 void perfmgr_trace_printk(char *module, char *string)
 {
 	(void)(module);
 	(void)(string);
 }
+
+#endif
