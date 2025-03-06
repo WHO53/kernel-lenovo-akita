@@ -63,7 +63,6 @@
 struct power_supply *charger_psy = NULL;
 
 extern bool g_batt_protect_mode;
-extern int mtkts_typec_get_hw_temp(void);
 static int g_usb_charge_disable_gpio;
 static bool g_high_temp_charging = true;
 
@@ -1461,15 +1460,6 @@ static void charger_check_status(struct mtk_charger *info)
 		g_soc_state = BAT_PROTECT_SOC_40_TO_60;
 		}
 	}
-	}
-
-	typec_temperature = mtkts_typec_get_hw_temp();
-	typec_temperature = typec_temperature/1000;
-	if((typec_temperature > 40) && ((typec_temperature-temperature) > 20)){
-		//typec_charging = false;
-	}
-	else{
-		//typec_charging = true;
 	}
 
 	if (info->cmd_discharging)

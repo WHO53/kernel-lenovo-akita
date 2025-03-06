@@ -38,8 +38,6 @@ struct tag_bootmode {
 	u32 boottype;
 };
 
-extern int mtkts_typec_get_hw_temp(void);
-extern void usb_charge_gpio_enable(bool en);
 static int g_charge_cycle_count = 0;
 
 int __attribute__ ((weak))
@@ -2491,19 +2489,8 @@ void fg_nafg_monitor(struct mtk_battery *gm)
 void fg_drv_update_hw_status(struct mtk_battery *gm)
 {
 	ktime_t ktime;
-	int typec_temperature;
 	int bat_temperature;
-	typec_temperature = mtkts_typec_get_hw_temp();
-	typec_temperature = typec_temperature/1000;
 	bat_temperature = force_get_tbat_internal(gm, true);
-	if((typec_temperature > 40) && ((typec_temperature-bat_temperature) > 20)){
-		usb_charge_gpio_enable(1);
-		bm_err("%s,%d,stop\n",__func__,typec_temperature);
-	}
-	else{
-		usb_charge_gpio_enable(0);
-		bm_err("%s,%d,start\n",__func__,typec_temperature);
-	}
 	bm_err("car[%d,%ld,%ld,%ld,%ld] tmp:%d soc:%d uisoc:%d vbat:%d ibat:%d algo:%d gm3:%d %d %d %d,boot:%d\n",
 		gauge_get_int_property(GAUGE_PROP_COULOMB),
 		gm->coulomb_plus.end, gm->coulomb_minus.end,
