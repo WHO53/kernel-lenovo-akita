@@ -205,7 +205,7 @@ int bq2560x_set_hz_mode(struct charger_device *chg_dev, bool en)
 	}else{
 		bq2560x_exit_hiz_mode(bq);
 	}
-	pr_debug("bq2560x_set_hz_mode:%s\n",en ? "enable":"disable");
+	pr_err("bq2560x_set_hz_mode:%s\n",en ? "enable":"disable");
 
 	return 0;
 }
@@ -555,30 +555,30 @@ static struct bq2560x_platform_data *bq2560x_parse_dt(struct device_node *np,
 	bq->pogo_otg_ctrl = devm_pinctrl_get(bq->dev);
 	
 	if (IS_ERR(bq->pogo_otg_ctrl)) {
-		pr_debug("cannot find pogo_otgctrl\n");	
+		pr_err("cannot find pogo_otgctrl\n");	
 	}else{
 		bq->pogo_otg_default = pinctrl_lookup_state(bq->pogo_otg_ctrl, "default");
 		if (IS_ERR(bq->pogo_otg_default)) {
-			pr_debug("cannot find  pogo_otg_default\n");
+			pr_err("cannot find  pogo_otg_default\n");
 		}
 		bq->pogo_otg_on = pinctrl_lookup_state(bq->pogo_otg_ctrl, "pogo_otg_on");
 		if (IS_ERR(bq->pogo_otg_on)) {
-			pr_debug("cannot find pogo_otg_on\n");
+			pr_err("cannot find pogo_otg_on\n");
 		}
 		bq->pogo_otg_off = pinctrl_lookup_state(bq->pogo_otg_ctrl, "pogo_otg_off");
 		if (IS_ERR(bq->pogo_otg_on)) {
-			pr_debug("cannot find pogo_otg_off\n");
+			pr_err("cannot find pogo_otg_off\n");
 		}	
 	}
 #endif
 	if (of_property_read_string(np, "charger_name", &bq->chg_dev_name) < 0) {
 		bq->chg_dev_name = "primary_chg";
-		pr_debug("no charger name\n");
+		pr_err("no charger name\n");
 	}
 
 	if (of_property_read_string(np, "eint_name", &bq->eint_name) < 0) {
 		bq->eint_name = "chr_stat";
-		pr_debug("no eint name\n");
+		pr_err("no eint name\n");
 	}
 
 	bq->chg_det_enable =
@@ -723,7 +723,7 @@ static int bq2560x_inform_charger_type(struct bq2560x *bq)
 					&propval);
 
 	if (ret < 0)
-		pr_debug("inform power supply online failed:%d\n", ret);
+		pr_err("inform power supply online failed:%d\n", ret);
 
 	propval.intval = bq->chg_type;
 
@@ -732,7 +732,7 @@ static int bq2560x_inform_charger_type(struct bq2560x *bq)
 					&propval);
 
 	if (ret < 0)
-		pr_debug("inform power supply charge type failed:%d\n", ret);
+		pr_err("inform power supply charge type failed:%d\n", ret);
 
 	return ret;
 }
@@ -753,9 +753,9 @@ static irqreturn_t bq2560x_irq_handler(int irq, void *data)
 	bq->power_good = !!(reg_val & REG08_PG_STAT_MASK);
 
 	if (!prev_pg && bq->power_good)
-		pr_debug("adapter/usb inserted\n");
+		pr_err("adapter/usb inserted\n");
 	else if (prev_pg && !bq->power_good)
-		pr_debug("adapter/usb removed\n");
+		pr_err("adapter/usb removed\n");
 
 	prev_chg_type = bq->chg_type;
 
@@ -779,7 +779,7 @@ static int bq2560x_register_interrupt(struct bq2560x *bq)
 		return -ENODEV;
 	}
 
-	pr_debug("irq = %d\n", bq->irq);
+	pr_err("irq = %d\n", bq->irq);
 
 	ret = devm_request_threaded_irq(bq->dev, bq->irq, NULL,
 					bq2560x_irq_handler,
@@ -949,7 +949,7 @@ static int bq2560x_charging(struct charger_device *chg_dev, bool enable)
 	else
 		ret = bq2560x_disable_charger(bq);
 
-	pr_debug("%s charger %s\n", enable ? "enable" : "disable",
+	pr_err("%s charger %s\n", enable ? "enable" : "disable",
 	       !ret ? "successfully" : "failed");
 
 	ret = bq2560x_read_byte(bq, BQ2560X_REG_01, &val);
@@ -1023,7 +1023,7 @@ static int bq2560x_set_ichg(struct charger_device *chg_dev, u32 curr)
 {
 	struct bq2560x *bq = dev_get_drvdata(&chg_dev->dev);
 
-	pr_debug("charge curr = %d\n", curr);
+	pr_err("charge curr = %d\n", curr);
 
 	return bq2560x_set_chargecurrent(bq, curr / 1000);
 }
@@ -1056,7 +1056,7 @@ static int bq2560x_set_vchg(struct charger_device *chg_dev, u32 volt)
 {
 	struct bq2560x *bq = dev_get_drvdata(&chg_dev->dev);
 
-	pr_debug("charge volt = %d\n", volt);
+	pr_err("charge volt = %d\n", volt);
 
 	return bq2560x_set_chargevolt(bq, volt / 1000);
 }
@@ -1082,7 +1082,7 @@ static int bq2560x_set_ivl(struct charger_device *chg_dev, u32 volt)
 {
 	struct bq2560x *bq = dev_get_drvdata(&chg_dev->dev);
 
-	pr_debug("vindpm volt = %d\n", volt);
+	pr_err("vindpm volt = %d\n", volt);
 
 	return bq2560x_set_input_volt_limit(bq, volt / 1000);
 
@@ -1092,7 +1092,7 @@ static int bq2560x_set_icl(struct charger_device *chg_dev, u32 curr)
 {
 	struct bq2560x *bq = dev_get_drvdata(&chg_dev->dev);
 
-	pr_debug("indpm curr = %d\n", curr);
+	pr_err("indpm curr = %d\n", curr);
 
 	return bq2560x_set_input_current_limit(bq, curr / 1000);
 }
@@ -1139,7 +1139,7 @@ static int bq2560x_set_otg(struct charger_device *chg_dev, bool en)
 		ret = bq2560x_disable_otg(bq);
 	}
 
-	pr_debug("%s OTG %s\n", en ? "enable" : "disable",
+	pr_err("%s OTG %s\n", en ? "enable" : "disable",
 	       !ret ? "successfully" : "failed");
 
 	return ret;
@@ -1178,7 +1178,7 @@ static int bq2560x_set_boost_ilmt(struct charger_device *chg_dev, u32 curr)
 	struct bq2560x *bq = dev_get_drvdata(&chg_dev->dev);
 	int ret;
 
-	pr_debug("otg curr = %d\n", curr);
+	pr_err("otg curr = %d\n", curr);
 
 	ret = bq2560x_set_boost_current(bq, curr / 1000);
 
@@ -1285,7 +1285,7 @@ static int bq2560x_charger_probe(struct i2c_client *client,
 
 	int ret = 0;
 
-	pr_debug("bq2560x probe start\n");
+	pr_err("bq2560x probe start\n");
 
 	bq = devm_kzalloc(&client->dev, sizeof(struct bq2560x), GFP_KERNEL);
 	if (!bq)
@@ -1313,7 +1313,7 @@ static int bq2560x_charger_probe(struct i2c_client *client,
 	}
 
 	if (bq->part_no != *(int *)match->data)
-		pr_debug("part no mismatch, hw:%s, devicetree:%s\n",
+		pr_err("part no mismatch, hw:%s, devicetree:%s\n",
 			pn_str[bq->part_no], pn_str[*(int *) match->data]);
 
 	bq->platform_data = bq2560x_parse_dt(node, bq);
@@ -1350,7 +1350,7 @@ static int bq2560x_charger_probe(struct i2c_client *client,
 	determine_initial_status(bq);
 #endif
 
-	pr_debug("bq2560x probe successfully, Part Num:%d, Revision:%d\n!",
+	pr_err("bq2560x probe successfully, Part Num:%d, Revision:%d\n!",
 	       bq->part_no, bq->revision);
 
 	return 0;
@@ -1370,7 +1370,7 @@ static int bq2560x_charger_remove(struct i2c_client *client)
 static void bq2560x_charger_shutdown(struct i2c_client *client)
 {
 	u8 reg_val;
-	pr_debug("[%s][%d] shipping mode flag = %d\n", __func__, __LINE__, ship_bq->ship_mode);
+	pr_err("[%s][%d] shipping mode flag = %d\n", __func__, __LINE__, ship_bq->ship_mode);
 
 	if (ship_bq->ship_mode) {
 		reg_val = REG07_BATFET_DLY_10S << REG07_BATFET_DLY_SHIFT;
@@ -1380,7 +1380,7 @@ static void bq2560x_charger_shutdown(struct i2c_client *client)
 		bq2560x_update_bits(ship_bq, BQ2560X_REG_07, REG07_BATFET_DIS_MASK, reg_val);
 		mdelay(10);
 		bq2560x_read_byte(ship_bq, BQ2560X_REG_07, &reg_val);
-		pr_debug("[%s][%d] reg_val = %d\n", __func__, __LINE__, reg_val);
+		pr_err("[%s][%d] reg_val = %d\n", __func__, __LINE__, reg_val);
 		mdelay(200);
 	}
 
