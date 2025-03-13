@@ -93,9 +93,9 @@ extern unsigned int func_lv_mask;
 #define DEBUG 1
 
 #define TAG	"[Power/cpufreq] "
-#define tag_pr_notice(fmt, args...)	pr_debug(TAG fmt, ##args)
-#define tag_pr_info(fmt, args...)	pr_debug(TAG fmt, ##args)
-#define tag_pr_debug(fmt, args...)	pr_debug(TAG fmt, ##args)
+#define tag_pr_notice(fmt, args...)	pr_err(TAG fmt, ##args)
+#define tag_pr_info(fmt, args...)	pr_err(TAG fmt, ##args)
+#define tag_pr_debug(fmt, args...)	pr_err(TAG fmt, ##args)
 
 #define cpufreq_ver(fmt, args...)		\
 do {						\
@@ -117,7 +117,7 @@ do {						\
 #define FUNC_LV_LOCAL          BIT(3)  /* mt_cpufreq driver local function  */
 #define FUNC_LV_HELP           BIT(4)  /* mt_cpufreq driver help function   */
 
-/* #define CONFIG_CPU_DVFS_SHOWLOG 1 */
+#define CONFIG_CPU_DVFS_SHOWLOG
 
 #ifdef CONFIG_CPU_DVFS_SHOWLOG
 #define FUNC_ENTER(lv) \
